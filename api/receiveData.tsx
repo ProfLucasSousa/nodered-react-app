@@ -6,13 +6,23 @@ import mysql from 'mysql2/promise';
 
 // Configuração do banco de dados
 // Aqui configuramos os detalhes de conexão ao banco, como host, usuário, senha e nome do banco.
+function requiredEnv(name: string): string {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`Variável de ambiente ${name} não configurada.`);
+  }
+
+  return value;
+}
+
 const dbConfig = {
-  host: 'db4free.net', // Endereço do servidor MySQL
-  port: 3306,          // Porta padrão do MySQL
-  user: 'lucas_silva',
-  password: 'pi04d688',
-  database: 'localhostlucas_s',
-  connectTimeout: 10000, // Tempo limite para conexão em milissegundos
+  host: requiredEnv('DB_HOST'),
+  port: Number(process.env.DB_PORT ?? 3306),
+  user: requiredEnv('DB_USER'),
+  password: requiredEnv('DB_PASSWORD'),
+  database: requiredEnv('DB_NAME'),
+  connectTimeout: 10000,
 };
 
 // Função principal exportada como handler para ser utilizada na Vercel
